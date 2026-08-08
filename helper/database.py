@@ -207,7 +207,7 @@ class Database:
             await self.col.update_one(
                 {'_id': user_id}, 
                 {'$set': {
-                    'usertype': user_type,
+                    'usertype': type,
                     'uploadlimit': limit
                 }}
             )
