@@ -178,12 +178,17 @@ class Database:
         user_data = await self.premium.find_one({"id": user_id})
         return user_data
 
-    async def add_premium(self, user_id, user_data, limit=None, type=None):    
-        await self.premium.update_one(
-            {"id": user_id}, 
-            {"$set": user_data}, 
-            upsert=True
-        )
+   async def add_premium(self, user_id, user_data, limit=None, type=None):
+    if limit is not None:
+        user_data["uploadlimit"] = limit
+    if type is not None:
+        user_data["usertype"] = type
+
+    await self.premium.update_one(
+        {"id": user_id}, 
+        {"$set": user_data}, 
+        upsert=True
+    )
         
         if Config.UPLOAD_LIMIT_MODE and limit and type:
             await self.col.update_one(
