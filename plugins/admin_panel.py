@@ -138,7 +138,7 @@ async def add_premium(client, message):
 
         expiry_time = datetime.datetime.now(ist) + datetime.timedelta(seconds=seconds)
         user_data = {"id": user_id, "expiry_time": expiry_time}
-        await digital_botz.addpremium(user_id, user_data)
+        await digital_botz.add_premium(user_id, user_data)
         data = await digital_botz.get_user(user_id)
         expiry = data.get("expiry_time")
         
