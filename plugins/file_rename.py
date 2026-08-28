@@ -233,9 +233,15 @@ async def upload_doc(bot, update):
     used = None
 
     try:
-        # Creating Directory for Metadata
-        if not os.path.isdir("Metadata"):
-            os.mkdir("Metadata")
+        # Ensure both working directories exist before we try to write into them.
+        # os.makedirs(..., exist_ok=True) is used instead of the previous
+        # isdir-check-then-mkdir pattern because that had a race condition: two
+        # renames starting in the same instant could both see isdir() == False
+        # and then both call os.mkdir(), and the second call would crash with
+        # FileExistsError. exist_ok=True makes directory creation safe under
+        # concurrent requests.
+        os.makedirs("Metadata", exist_ok=True)
+        os.makedirs("Renames", exist_ok=True)
 
         user_id = int(update.message.chat.id)
         new_name = update.message.text
